@@ -146,6 +146,13 @@ button.ed,.act .del{min-height:36px;padding:0 10px}
   <h2>Total por mês</h2>
   <div class="scroll"><table id="months"></table></div>
 </section>
+<section class="card">
+  <h2>Cópia de segurança</h2>
+  <p class="msg" style="margin:0 0 8px">Para levar os registos para outro endereço ou aparelho: exporta aqui, copia o texto e importa no outro.</p>
+  <textarea id="bk" rows="4" aria-label="Dados" style="width:100%;font:inherit;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:10px"></textarea>
+  <div class="tools"><button id="bkExp">Exportar</button><button id="bkImp">Importar</button></div>
+  <div class="msg" id="bkMsg"></div>
+</section>
 </main>
 
 <script>
@@ -280,6 +287,22 @@ $("cBtn").addEventListener("click",function(){
 $("cCancel").addEventListener("click",function(){S.run=null;$("cErr").textContent="";save();renderClock();});
 var editId=null;
 var onlyP=false;
+$("bkExp").addEventListener("click",function(){
+  var t=JSON.stringify(S);$("bk").value=t;$("bk").focus();$("bk").select();
+  var done=function(){$("bkMsg").textContent="Copiado. Cola no outro aparelho e toca em Importar.";};
+  var fail=function(){$("bkMsg").textContent="Texto selecionado: copia-o manualmente.";};
+  try{navigator.clipboard.writeText(t).then(done,fail);}catch(e){fail();}
+});
+$("bkImp").addEventListener("click",function(){
+  var p;try{p=JSON.parse($("bk").value);}catch(e){p=null;}
+  if(!p||!Array.isArray(p.entries)){$("bkMsg").textContent="Texto inválido. Cole os dados exportados.";return;}
+  var ids={};S.entries.forEach(function(e){ids[e.id]=1;});var n=0;
+  p.entries.forEach(function(e){if(e&&e.date&&e.min>0&&!ids[e.id]){S.entries.push(e);ids[e.id]=1;n++;}});
+  if(p.target>0)S.target=p.target;
+  if(Array.isArray(p.wd)&&p.wd.length)S.wd=p.wd;
+  if(p.wh&&typeof p.wh==="object")S.wh=p.wh;
+  save();$("target").value=S.target;chips();render();$("bkMsg").textContent=n+" registo(s) importado(s).";
+});
 $("list").addEventListener("change",function(ev){
   var c=ev.target;if(!c.dataset.ok)return;
   S.entries.forEach(function(e){if(String(e.id)===c.dataset.ok)e.ok=c.checked;});save();render();
