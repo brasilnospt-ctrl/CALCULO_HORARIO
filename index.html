@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2f5bea">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Horas de estágio</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#eef2f6;--card:#fff;--ink:#14213d;--mute:#5b6b85;--line:#d5dde8;--acc:#2f5bea;--acc-ink:#fff;--bar:#f2a900;--danger:#c23b3b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1624;--card:#18223a;--ink:#e8eefc;--mute:#92a1bf;--line:#2a3756;--acc:#6f93ff;--acc-ink:#0f1624;--bar:#ffbf2e;--danger:#ff7a7a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1624;--card:#18223a;--ink:#e8eefc;--mute:#92a1bf;--line:#2a3756;--acc:#6f93ff;--acc-ink:#0f1624;--bar:#ffbf2e;--danger:#ff7a7a;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.45 "Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:640px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:1.5rem;font-weight:800;margin:0 0 16px;letter-spacing:-.01em}
+h2{font-size:1.05rem;font-weight:600;margin:0 0 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+.big{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.big b{font-size:2.6rem;font-weight:800;line-height:1;letter-spacing:-.02em}
+.big span{color:var(--mute)}
+.track{height:14px;background:var(--bg);border-radius:7px;overflow:hidden;margin:14px 0 6px;border:1px solid var(--line)}
+.fill{height:100%;width:0;background:var(--bar);transition:width .4s}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.stats div{background:var(--bg);border-radius:10px;padding:10px 12px}
+.stats small{display:block;color:var(--mute);font-size:.8rem}
+.stats strong{font-size:1.05rem}
+label{display:block;font-size:.85rem;color:var(--mute);margin-bottom:4px}
+input{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:10px;min-height:44px}
+input:focus-visible,button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.full{grid-column:1/-1}
+.preview{margin:14px 0 0;font-weight:600}
+button{font:inherit;cursor:pointer;border-radius:9px;min-height:44px;padding:0 16px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+button.pri{background:var(--acc);color:var(--acc-ink);border-color:var(--acc);font-weight:600;width:100%;margin-top:12px}
+button.del{min-height:36px;padding:0 10px;color:var(--danger)}
+.row{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.row .d{flex:1;min-width:0}
+.row .d small{color:var(--mute);display:block;overflow-wrap:anywhere}
+.row .h{font-weight:600;white-space:nowrap}
+.empty{color:var(--mute);margin:0}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.msg{font-size:.85rem;color:var(--mute);margin:8px 0 0;min-height:1.2em}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+td,th{padding:6px 0;text-align:left;border-top:1px solid var(--line);font-weight:400}
+td:last-child,th:last-child{text-align:right;font-weight:600}
+.clock{text-align:center}
+.clock .t{font-size:2.6rem;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1}
+.clock .s{color:var(--mute);margin:4px 0 12px}
+.clock .p{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:12px;color:var(--mute);font-size:.9rem}
+.clock .p input{width:90px}
+button.pri.stop{background:var(--danger);border-color:var(--danger);color:var(--bg)}
+button.link{border:0;background:none;color:var(--mute);text-decoration:underline;min-height:36px;margin-top:4px}
+.act{display:flex;gap:4px}
+button.ed,.act .del{min-height:36px;padding:0 10px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{min-height:44px;min-width:48px;padding:0 10px;border-radius:22px}
+.chip[aria-pressed="true"]{background:var(--acc);color:var(--acc-ink);border-color:var(--acc);font-weight:600}
+.hrs{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.hr{display:flex;align-items:center;gap:6px;margin:0;color:var(--ink)}
+.hr span{width:34px;font-weight:600}
+.hr input{width:68px;padding:8px}
+.hr em{font-style:normal;color:var(--mute)}
+.row{flex-wrap:wrap}
+.row .d{flex:1 1 140px;min-width:0}
+.act{margin-left:auto}
+.ck{margin:0;display:flex}
+.ck input{width:26px;min-height:26px;height:26px;padding:0;accent-color:var(--acc)}
+.row.pend{border-left:4px solid var(--bar);padding-left:8px}
+.tag{display:inline-block;font-size:.72rem;font-weight:600;color:var(--ink);background:var(--bar);border-radius:6px;padding:1px 6px;vertical-align:middle}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<h1>Horas de estágio</h1>
+
+<section class="card clock">
+  <div class="t" id="cTime" aria-live="off">00:00:00</div>
+  <div class="s" id="cStatus"></div>
+  <button class="pri" id="cBtn" style="margin-top:0">Iniciar</button>
+  <div class="p"><label for="cBrk" style="margin:0">Pausa a descontar (min)</label><input type="number" id="cBrk" min="0" step="5" value="60" inputmode="numeric"></div>
+  <button class="link" id="cCancel" hidden>Cancelar turno</button>
+  <div class="msg" id="cErr" role="alert"></div>
+</section>
+
+<section class="card" aria-live="polite">
+  <div class="big"><b id="done">0h 00m</b><span>de <span id="tgtTxt">0</span>h</span></div>
+  <div class="track"><div class="fill" id="fill"></div></div>
+  <div class="msg" id="pct"></div>
+  <div class="stats">
+    <div><small>Faltam</small><strong id="left">–</strong></div>
+    <div><small>Dias registados</small><strong id="days">0</strong></div>
+    <div><small>Média por dia</small><strong id="avg">–</strong></div>
+    <div><small>Fim previsto</small><strong id="eta">–</strong></div>
+  </div>
+</section>
+
+<section class="card">
+  <h2 id="formTitle">Registar dia</h2>
+  <div class="grid">
+    <div class="full"><label for="date">Data</label><input type="date" id="date"></div>
+    <div><label for="start">Entrada</label><input type="time" id="start" value="09:00"></div>
+    <div><label for="end">Saída</label><input type="time" id="end" value="17:00"></div>
+    <div><label for="brk">Pausa (minutos)</label><input type="number" id="brk" min="0" step="5" value="60" inputmode="numeric"></div>
+    <div><label for="note">Nota (opcional)</label><input type="text" id="note" maxlength="80"></div>
+  </div>
+  <p class="preview" id="prev">Total do dia: –</p>
+  <button class="pri" id="add">Adicionar registo</button>
+  <button class="link" id="cancelEdit" hidden>Cancelar edição</button>
+  <div class="msg" id="err" role="alert"></div>
+</section>
+
+<section class="card">
+  <h2>Meta e dias de estágio</h2>
+  <label for="target">Total de horas do estágio</label>
+  <input type="number" id="target" min="1" step="1" inputmode="numeric">
+  <label style="margin-top:14px">Dias da semana em que estagias</label>
+  <div class="chips" id="chips" role="group" aria-label="Dias da semana de estágio"></div>
+  <label style="margin-top:14px">Horas previstas por dia</label>
+  <div class="hrs" id="hrs"></div>
+  <p class="msg" id="wk"></p>
+  <p class="msg">A data prevista de fim usa estes dias e horas.</p>
+</section>
+
+<section class="card">
+  <h2>Registos</h2>
+  <p class="msg" id="sum"></p>
+  <button class="chip" id="fp" aria-pressed="false" style="margin-bottom:8px">Só por confirmar</button>
+  <div id="list"></div>
+  <div class="tools">
+    <button id="copy">Copiar resumo</button>
+    <button id="clear" class="del">Apagar tudo</button>
+  </div>
+  <div class="msg" id="tmsg"></div>
+</section>
+
+<section class="card">
+  <h2>Total por mês</h2>
+  <div class="scroll"><table id="months"></table></div>
+</section>
+</main>
+
+<script>
+(function(){
+var KEY="estagio_horas_v1";
+var S={target:300,entries:[]};
+try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);if(p&&Array.isArray(p.entries)){S=p;if(!S.target)S.target=300;}}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function $(id){return document.getElementById(id);}
+function pad(n){return n<10?"0"+n:""+n;}
+function fmt(m){m=Math.round(m);var h=Math.floor(m/60);return h+"h "+pad(m%60)+"m";}
+function toMin(t){var a=t.split(":");return (+a[0])*60+(+a[1]);}
+function calc(s,e,b){if(!s||!e)return null;var d=toMin(e)-toMin(s);if(d<=0)d+=1440;d-=(+b||0);return d>0?d:null;}
+function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
+function br(s){var a=s.split("-");return a[2]+"/"+a[1]+"/"+a[0];}
+var WD=["dom","seg","ter","qua","qui","sex","sáb"];
+var MN=["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+function wd(s){var a=s.split("-");return WD[new Date(+a[0],+a[1]-1,+a[2]).getDay()];}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+
+$("date").value=iso(new Date());
+$("target").value=S.target;
+if(!Array.isArray(S.wd)||!S.wd.length)S.wd=[1,2,3,4,5];
+if(!S.wh||typeof S.wh!=="object")S.wh={};
+for(var q=0;q<7;q++){if(typeof S.wh[q]!=="number")S.wh[q]=8;}
+function weekPlan(){return S.wd.reduce(function(a,d){return a+(S.wh[d]||0);},0);}
+function wk(){$("wk").textContent="Previsto por semana: "+fmt(weekPlan()*60);}
+function hrs(){
+  $("hrs").innerHTML=ORD.filter(function(d){return S.wd.indexOf(d)>-1;}).map(function(d){return '<label class="hr"><span>'+WL[d]+'</span><input type="number" min="0" max="24" step="0.5" inputmode="decimal" data-h="'+d+'" value="'+S.wh[d]+'" aria-label="Horas previstas '+WL[d]+'"><em>h</em></label>';}).join("");
+  wk();
+}
+$("hrs").addEventListener("input",function(ev){
+  var i=ev.target;if(!i.dataset.h)return;
+  var v=parseFloat(String(i.value).replace(",","."));
+  if(isNaN(v)||v<0||v>24)return;
+  S.wh[+i.dataset.h]=v;save();wk();render();
+});
+var WL=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"],ORD=[1,2,3,4,5,6,0];
+function chips(){hrs();$("chips").innerHTML=ORD.map(function(d){return '<button type="button" class="chip" data-d="'+d+'" aria-pressed="'+(S.wd.indexOf(d)>-1)+'">'+WL[d]+'</button>';}).join("");}
+$("chips").addEventListener("click",function(ev){
+  var b=ev.target.closest("button[data-d]");if(!b)return;
+  var d=+b.dataset.d,i=S.wd.indexOf(d);
+  if(i>-1){if(S.wd.length===1)return;S.wd.splice(i,1);}else S.wd.push(d);
+  save();chips();render();
+});
+chips();
+
+function prev(){var m=calc($("start").value,$("end").value,$("brk").value);$("prev").textContent="Total do dia: "+(m?fmt(m):"–");}
+["start","end","brk"].forEach(function(i){$(i).addEventListener("input",prev);});
+
+$("add").addEventListener("click",function(){
+  var d=$("date").value,m=calc($("start").value,$("end").value,$("brk").value);
+  $("err").textContent="";
+  if(!d){$("err").textContent="Escolha a data.";return;}
+  if(!m){$("err").textContent="Verifique as horas: o total do dia tem de ser maior que zero.";return;}
+  var rec={date:d,start:$("start").value,end:$("end").value,brk:+$("brk").value||0,min:m,note:$("note").value.trim()};
+  if(editId){S.entries.forEach(function(e){if(String(e.id)===editId){for(var k in rec)e[k]=rec[k];}});stopEdit();}
+  else{rec.id=Date.now();S.entries.push(rec);}
+  $("note").value="";save();render();
+});
+$("target").addEventListener("input",function(){var v=+$("target").value;if(v>0){S.target=v;save();render();}});
+$("clear").addEventListener("click",function(){
+  if(!S.entries.length)return;
+  if($("clear").dataset.sure!=="1"){$("clear").dataset.sure="1";$("clear").textContent="Confirmar: apagar tudo";setTimeout(function(){$("clear").dataset.sure="";$("clear").textContent="Apagar tudo";},4000);return;}
+  stopEdit();S.entries=[];$("clear").dataset.sure="";$("clear").textContent="Apagar tudo";save();render();
+});
+$("copy").addEventListener("click",function(){
+  var t=S.entries.slice().sort(function(a,b){return a.date<b.date?-1:1;}).map(function(e){return br(e.date)+"\t"+e.start+"\t"+e.end+"\t"+e.brk+"min\t"+fmt(e.min)+"\t"+(e.ok?"Sim":"Não");}).join("\n");
+  t="Data\tEntrada\tSaída\tPausa\tTotal\tConfirmado\n"+t+"\nTotal: "+fmt(S.entries.reduce(function(a,e){return a+e.min;},0));
+  var ok=function(){$("tmsg").textContent="Resumo copiado.";};
+  var no=function(){$("tmsg").textContent="Não foi possível copiar neste navegador.";};
+  try{navigator.clipboard.writeText(t).then(ok,no);}catch(e){no();}
+});
+$("list").addEventListener("click",function(ev){
+  var ed=ev.target.closest("button[data-edit]");
+  if(ed){startEdit(ed.dataset.edit);return;}
+  var b=ev.target.closest("button[data-id]");if(!b)return;
+  if(editId===b.dataset.id)stopEdit();
+  S.entries=S.entries.filter(function(e){return String(e.id)!==b.dataset.id;});save();render();
+});
+
+function render(){
+  var tot=S.entries.reduce(function(a,e){return a+e.min;},0),tgt=S.target*60;
+  $("done").textContent=fmt(tot);$("tgtTxt").textContent=S.target;
+  var pct=Math.min(100,tot/tgt*100);$("fill").style.width=pct+"%";
+  $("pct").textContent=pct.toFixed(1).replace(".",",")+"% concluído";
+  var left=Math.max(0,tgt-tot);$("left").textContent=left?fmt(left):"Meta atingida";
+  var days={};S.entries.forEach(function(e){days[e.date]=1;});
+  var n=Object.keys(days).length;$("days").textContent=n;
+  var avg=n?tot/n:0;$("avg").textContent=n?fmt(avg):"–";
+  var eta="–";
+  if(left&&weekPlan()>0){
+    var c=left,d=new Date(),g=0;if(!days[iso(d)])d.setDate(d.getDate()-1);
+    while(c>0&&g++<3650){d.setDate(d.getDate()+1);var w=d.getDay();if(S.wd.indexOf(w)>-1)c-=(S.wh[w]||0)*60;}
+    eta=br(iso(d));
+  }else if(!left&&n){eta="Concluído";}
+  $("eta").textContent=eta;
+
+  var L=$("list");
+  if(!S.entries.length){L.innerHTML='<p class="empty">Ainda não há registos. Preencha o formulário acima para começar.</p>';}
+  else{
+    L.innerHTML=S.entries.filter(function(e){return !onlyP||!e.ok;}).slice().sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:b.id-a.id;}).map(function(e){
+      return '<div class="row'+(e.ok?'':' pend')+'"><label class="ck"><input type="checkbox" data-ok="'+e.id+'"'+(e.ok?' checked':'')+' aria-label="Confirmado na folha: '+br(e.date)+'"></label><div class="d"><strong>'+wd(e.date)+", "+br(e.date)+'</strong>'+(e.ok?'':' <span class="tag">Por confirmar</span>')+'<small>'+e.start+" – "+e.end+", pausa "+e.brk+" min"+(e.note?" · "+esc(e.note):"")+'</small></div><div class="h">'+fmt(e.min)+'</div><div class="act"><button class="ed" data-edit="'+e.id+'" aria-label="Editar registo de '+br(e.date)+'">Editar</button><button class="del" data-id="'+e.id+'" aria-label="Apagar registo de '+br(e.date)+'">Apagar</button></div></div>';
+    }).join("");
+  }
+  if(S.entries.length&&!L.innerHTML)L.innerHTML='<p class="empty">Tudo confirmado.</p>';
+  var cm=0,pm=0,pn=0;S.entries.forEach(function(e){if(e.ok)cm+=e.min;else{pm+=e.min;pn++;}});
+  $("sum").textContent="Confirmadas: "+fmt(cm)+" · Por confirmar: "+fmt(pm)+" ("+pn+")";
+  $("fp").textContent=onlyP?"Mostrar todos":"Só por confirmar";$("fp").setAttribute("aria-pressed",String(!!onlyP));
+  var M={};S.entries.forEach(function(e){var k=e.date.slice(0,7);M[k]=(M[k]||0)+e.min;});
+  var ks=Object.keys(M).sort().reverse();
+  $("months").innerHTML=ks.length?ks.map(function(k){var a=k.split("-");return "<tr><td>"+MN[+a[1]-1]+" de "+a[0]+"</td><td>"+fmt(M[k])+"</td></tr>";}).join(""):'<tr><td class="empty">Sem dados.</td></tr>';
+}
+function clk(ms){var s=Math.max(0,Math.floor(ms/1000));return pad(Math.floor(s/3600))+":"+pad(Math.floor(s%3600/60))+":"+pad(s%60);}
+function nowHM(){var d=new Date();return pad(d.getHours())+":"+pad(d.getMinutes());}
+function tick(){$("cTime").textContent=S.run?clk(Date.now()-S.run.ts):"00:00:00";}
+function renderClock(){
+  var r=S.run;
+  $("cStatus").textContent=r?"Em curso desde as "+r.start+" de "+br(r.date):"Sem turno em curso";
+  $("cBtn").textContent=r?"Finalizar":"Iniciar";
+  $("cBtn").className="pri"+(r?" stop":"");
+  $("cCancel").hidden=!r;tick();
+}
+$("cBtn").addEventListener("click",function(){
+  $("cErr").textContent="";
+  if(!S.run){var d=new Date();S.run={ts:d.getTime(),date:iso(d),start:nowHM()};save();renderClock();return;}
+  var m=Math.round((Date.now()-S.run.ts)/60000)-(+$("cBrk").value||0);
+  if(m<=0){$("cErr").textContent="O tempo trabalhado ainda é menor que a pausa. Reduza a pausa ou continue o turno.";return;}
+  S.entries.push({id:Date.now(),date:S.run.date,start:S.run.start,end:nowHM(),brk:+$("cBrk").value||0,min:m,note:""});
+  S.run=null;save();render();renderClock();
+});
+$("cCancel").addEventListener("click",function(){S.run=null;$("cErr").textContent="";save();renderClock();});
+var editId=null;
+var onlyP=false;
+$("list").addEventListener("change",function(ev){
+  var c=ev.target;if(!c.dataset.ok)return;
+  S.entries.forEach(function(e){if(String(e.id)===c.dataset.ok)e.ok=c.checked;});save();render();
+});
+$("fp").addEventListener("click",function(){onlyP=!onlyP;render();});
+function startEdit(id){
+  var e=null;S.entries.forEach(function(x){if(String(x.id)===id)e=x;});
+  if(!e)return;
+  editId=id;
+  $("date").value=e.date;$("start").value=e.start;$("end").value=e.end;$("brk").value=e.brk;$("note").value=e.note||"";
+  $("formTitle").textContent="Editar registo";$("add").textContent="Guardar alterações";$("cancelEdit").hidden=false;$("err").textContent="";
+  prev();$("formTitle").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function stopEdit(){
+  editId=null;$("date").value=iso(new Date());$("note").value="";
+  $("formTitle").textContent="Registar dia";$("add").textContent="Adicionar registo";$("cancelEdit").hidden=true;
+}
+$("cancelEdit").addEventListener("click",function(){stopEdit();$("err").textContent="";});
+setInterval(tick,1000);
+renderClock();
+prev();render();
+})();
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
+</body>
+</html>
